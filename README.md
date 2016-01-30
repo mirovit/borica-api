@@ -22,8 +22,8 @@ The Request as its name suggests is responsible for generating the URLs for requ
 require __DIR__ . '/vendor/autoload.php';
 
 $factory = new Factory(
-    new Request(<terminal id from BORICA>, <private key signed from BORICA>, <private key password (optional)>, <language (optional - BG or EN)>, <debug (whether you're testing or accepting payments)>),
-    new Response(<public certificate from BORICA>)
+    new Request('<terminal id from BORICA>', '<private key signed from BORICA>', '<private key password (optional)>', '<language (optional - BG or EN)>', '<debug (optional, whether you're testing or accepting payments)>'),
+    new Response('<public certificate from BORICA>')
 );
 ```
 
