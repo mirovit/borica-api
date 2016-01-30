@@ -1,0 +1,22 @@
+{
+    "name": "mirovit/borica-api",
+    "description": "Package that enables the communication with BORICA via their API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Miroslav Vitanov",
+            "email": "mvvitanov@gmail.com"
+        }
+    ],
+    "require": {
+        "nesbot/carbon": "^1.21"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mirovit\\": "src/"
+        }
+    }
+}
