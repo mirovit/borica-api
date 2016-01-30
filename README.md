@@ -65,6 +65,7 @@ You can either add it to the `config/app.php` or register it in `Providers/AppSe
 
 namespace App\Providers;
 
+use Mirovit\Borica\Factory;
 use Mirovit\Borica\Request;
 use Mirovit\Borica\Response;
 use Illuminate\Support\ServiceProvider;
@@ -87,8 +88,8 @@ class BoricaServiceProvider extends ServiceProvider
             return new Response('path/to/public.cer');
         });
 
-        $this->app->bind(Borica::class, function(){
-            return new Borica(app(Request::class), app(Response::class));
+        $this->app->bind(Factory::class, function(){
+            return new Factory(app(Request::class), app(Response::class));
         }, true);
     }
 }
