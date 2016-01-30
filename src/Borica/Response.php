@@ -59,7 +59,7 @@ class Response
 
     public function amount()
     {
-        return $this->response[self::AMOUNT];
+        return (float)$this->response[self::AMOUNT] / 100;
     }
 
     public function terminalID()
@@ -69,7 +69,7 @@ class Response
 
     public function orderID()
     {
-        return $this->response[self::ORDER_ID];
+        return trim($this->response[self::ORDER_ID]);
     }
 
     public function responseCode()
