@@ -313,7 +313,7 @@ class Request
      */
     private function validateAmount($amount)
     {
-        if (!is_int($amount) || !is_numeric($amount)) {
+        if (!is_numeric($amount)) {
             throw new InvalidParameterException('The amount should be a number!');
         }
     }
