@@ -76,10 +76,9 @@ class Request
      * Check the status of a transaction with Borica.
      *
      * @param string $protocolVersion
-     * @param string $oneTimeTicket
      * @return string
      */
-    public function status($protocolVersion = '2.0', $oneTimeTicket = null)
+    public function status($protocolVersion = '2.0')
     {
         $message = self::REGISTER_TRANSACTION;
         $message .= $this->getDate();
@@ -94,10 +93,6 @@ class Request
             $message .= $this->getCurrency();
         }
 
-        if ($protocolVersion == '2.0') {
-            $message .= str_pad($oneTimeTicket, 6);
-        }
-
         $message = $this->signMessage($message);
 
         return "{$this->getGatewayURL()}transactionStatusReport?eBorica=" . urlencode(base64_encode($message));
@@ -107,10 +102,9 @@ class Request
      * Register a delayed request.
      *
      * @param string $protocolVersion
-     * @param string $oneTimeTicket
      * @return string
      */
-    public function registerDelayedRequest($protocolVersion = '2.0', $oneTimeTicket = null)
+    public function registerDelayedRequest($protocolVersion = '2.0')
     {
         $message = self::DELAYED_AUTHORIZATION_REQUEST;
         $message .= $this->getDate();
@@ -125,10 +119,6 @@ class Request
             $message .= $this->getCurrency();
         }
 
-        if ($protocolVersion == '2.0') {
-            $message .= str_pad($oneTimeTicket, 6);
-        }
-
         $message = $this->signMessage($message);
 
         return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
@@ -137,13 +127,23 @@ class Request
     /**
      * Complete an already registered transaction.
      *
+     * @param string $protocolVersion
      * @return string
      */
-    public function completeDelayedRequest()
+    public function completeDelayedRequest($protocolVersion = '2.0')
     {
         $message = self::DELAYED_AUTHORIZATION_COMPLETE;
-        $message .= $this->getOrderID();
+        $message .= $this->getDate();
         $message .= $this->getAmount();
+        $message .= $this->getTerminalID();
+        $message .= $this->getOrderID();
+        $message .= $this->getDescription();
+        $message .= $this->getLanguage();
+        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+
+        if ($protocolVersion != '1.0') {
+            $message .= $this->getCurrency();
+        }
 
         $message = $this->signMessage($message);
 
@@ -153,13 +153,23 @@ class Request
     /**
      * Cancel already registered delayed request.
      *
+     * @param string $protocolVersion
      * @return string
      */
-    public function reverseDelayedRequest()
+    public function reverseDelayedRequest($protocolVersion = '2.0')
     {
         $message = self::DELAYED_AUTHORIZATION_REVERSAL;
-        $message .= $this->getOrderID();
+        $message .= $this->getDate();
         $message .= $this->getAmount();
+        $message .= $this->getTerminalID();
+        $message .= $this->getOrderID();
+        $message .= $this->getDescription();
+        $message .= $this->getLanguage();
+        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+
+        if ($protocolVersion != '1.0') {
+            $message .= $this->getCurrency();
+        }
 
         $message = $this->signMessage($message);
 
@@ -169,13 +179,19 @@ class Request
     /**
      * Reverse a payment.
      *
+     * @param string $protocolVersion
      * @return string
      */
-    public function reverse()
+    public function reverse($protocolVersion = '2.0')
     {
         $message = self::REVERSAL;
-        $message .= $this->getOrderID();
+        $message .= $this->getDate();
         $message .= $this->getAmount();
+        $message .= $this->getTerminalID();
+        $message .= $this->getOrderID();
+        $message .= $this->getDescription();
+        $message .= $this->getLanguage();
+        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
 
         $message = $this->signMessage($message);
 
