@@ -48,7 +48,7 @@ class Request
      * @param string $oneTimeTicket
      * @return string
      */
-    public function register($protocolVersion = '2.0', $oneTimeTicket = null)
+    public function register($protocolVersion = '1.1', $oneTimeTicket = null)
     {
         $message = self::REGISTER_TRANSACTION;
         $message .= $this->getDate();
@@ -78,7 +78,7 @@ class Request
      * @param string $protocolVersion
      * @return string
      */
-    public function status($protocolVersion = '2.0')
+    public function status($protocolVersion = '1.1')
     {
         $message = self::REGISTER_TRANSACTION;
         $message .= $this->getDate();
@@ -104,7 +104,7 @@ class Request
      * @param string $protocolVersion
      * @return string
      */
-    public function registerDelayedRequest($protocolVersion = '2.0')
+    public function registerDelayedRequest($protocolVersion = '1.1')
     {
         $message = self::DELAYED_AUTHORIZATION_REQUEST;
         $message .= $this->getDate();
@@ -130,7 +130,7 @@ class Request
      * @param string $protocolVersion
      * @return string
      */
-    public function completeDelayedRequest($protocolVersion = '2.0')
+    public function completeDelayedRequest($protocolVersion = '1.1')
     {
         $message = self::DELAYED_AUTHORIZATION_COMPLETE;
         $message .= $this->getDate();
@@ -156,7 +156,7 @@ class Request
      * @param string $protocolVersion
      * @return string
      */
-    public function reverseDelayedRequest($protocolVersion = '2.0')
+    public function reverseDelayedRequest($protocolVersion = '1.1')
     {
         $message = self::DELAYED_AUTHORIZATION_REVERSAL;
         $message .= $this->getDate();
@@ -182,7 +182,7 @@ class Request
      * @param string $protocolVersion
      * @return string
      */
-    public function reverse($protocolVersion = '2.0')
+    public function reverse($protocolVersion = '1.1')
     {
         $message = self::REVERSAL;
         $message .= $this->getDate();
