@@ -193,6 +193,10 @@ class Request
         $message .= $this->getLanguage();
         $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
 
+        if ($protocolVersion != '1.0') {
+            $message .= $this->getCurrency();
+        }
+        
         $message = $this->signMessage($message);
 
         return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
