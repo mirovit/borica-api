@@ -20,6 +20,7 @@ class Request
     private $terminalID;
     private $privateKey;
     private $privateKeyPassword;
+    private $useFileKeyReader;
 
     private $gatewayURL = 'https://gate.borica.bg/boreps/';
     private $testGatewayURL = 'https://gatet.borica.bg/boreps/';
@@ -32,11 +33,12 @@ class Request
     private $currency = 'EUR';
     private $debug;
 
-    public function __construct($terminalID, $privateKey, $privateKeyPassword = '', $language = '', $debug = false)
+    public function __construct($terminalID, $privateKey, $privateKeyPassword = '', $useFileKeyReader = true, $language = '', $debug = false)
     {
         $this->terminalID = $terminalID;
         $this->privateKey = $privateKey;
         $this->privateKeyPassword = $privateKeyPassword;
+        $this->useFileKeyReader = $useFileKeyReader;
         $this->language = strtoupper($language);
         $this->debug = $debug;
     }
@@ -308,7 +310,10 @@ class Request
      */
     public function getPrivateKey()
     {
-        return $this->readKey($this->privateKey);
+        if ($this->useFileKeyReader) {
+            return $this->readKey($this->privateKey);
+        }
+        return $this->privateKey;
     }
 
     /**
