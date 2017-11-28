@@ -31,7 +31,7 @@ class Response
     public function parse($message)
     {
         $message = base64_decode($message);
-        
+
         $response = [
             self::TRANSACTION_CODE  => substr($message, 0, 2),
             self::TRANSACTION_TIME  => substr($message, 2, 14),
