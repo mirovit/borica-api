@@ -158,6 +158,96 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /** @test */
+    public function it_registeres_a_delayed_transaction()
+    {
+        $protocol_version = '1.1';
+
+        $url = $this->request
+            ->amount(1)
+            ->orderID(1)
+            ->description('testing the process')
+            ->currency('EUR')
+            ->registerDelayedRequest($protocol_version);
+
+        $expected = $this->request->getGatewayURL() .
+            'manageTransaction?eBorica=' .
+            Request::DELAYED_AUTHORIZATION_REQUEST .
+            $this->request->getDate() .
+            $this->request->getAmount() .
+            $this->request->getTerminalID() .
+            $this->request->getOrderID() .
+            $this->request->getDescription() .
+            $this->request->getLanguage() .
+            $protocol_version .
+            $this->request->getCurrency();
+
+        $this->assertSame(
+            $expected,
+            $url
+        );
+    }
+
+    /** @test */
+    public function it_completes_a_delayed_transaction()
+    {
+        $protocol_version = '1.1';
+
+        $url = $this->request
+            ->amount(1)
+            ->orderID(1)
+            ->description('testing the process')
+            ->currency('EUR')
+            ->completeDelayedRequest($protocol_version);
+
+        $expected = $this->request->getGatewayURL() .
+            'manageTransaction?eBorica=' .
+            Request::DELAYED_AUTHORIZATION_COMPLETE .
+            $this->request->getDate() .
+            $this->request->getAmount() .
+            $this->request->getTerminalID() .
+            $this->request->getOrderID() .
+            $this->request->getDescription() .
+            $this->request->getLanguage() .
+            $protocol_version .
+            $this->request->getCurrency();
+
+        $this->assertSame(
+            $expected,
+            $url
+        );
+    }
+
+    /** @test */
+    public function it_reverses_a_delayed_transaction()
+    {
+        $protocol_version = '1.1';
+
+        $url = $this->request
+            ->amount(1)
+            ->orderID(1)
+            ->description('testing the process')
+            ->currency('EUR')
+            ->reverseDelayedRequest($protocol_version);
+
+        $expected = $this->request->getGatewayURL() .
+            'manageTransaction?eBorica=' .
+            Request::DELAYED_AUTHORIZATION_REVERSAL .
+            $this->request->getDate() .
+            $this->request->getAmount() .
+            $this->request->getTerminalID() .
+            $this->request->getOrderID() .
+            $this->request->getDescription() .
+            $this->request->getLanguage() .
+            $protocol_version .
+            $this->request->getCurrency();
+
+        $this->assertSame(
+            $expected,
+            $url
+        );
+    }
+
     /** skip for now */
     public function it_pays_profit()
     {
