@@ -20,10 +20,12 @@ class Response
 
     private $response = [];
     private $publicCertificate;
+    private $useFileKeyReader;
 
-    public function __construct($publicCertificate)
+    public function __construct($publicCertificate, $useFileKeyReader = true)
     {
         $this->publicCertificate = $publicCertificate;
+        $this->useFileKeyReader = $useFileKeyReader;
     }
 
     public function parse($message)
@@ -124,6 +126,9 @@ class Response
      */
     public function getCertificate()
     {
-        return $this->readKey($this->publicCertificate);
+        if ($this->useFileKeyReader) {
+          return $this->readKey($this->publicCertificate);
+        }
+        return $this->publicCertificate;
     }
 }
