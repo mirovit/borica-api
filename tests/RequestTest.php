@@ -101,12 +101,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function it_checks_status()
     {
+        $protocol_version = '2.0';
+
         $url = $this->request
             ->amount(1)
             ->orderID(1)
             ->description('testing the process')
             ->currency('EUR')
-            ->status('2.0', '');
+            ->status($protocol_version);
 
         $expected = $this->request->getGatewayURL() .
             'transactionStatusReport?eBorica=' .
@@ -117,9 +119,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->request->getOrderID() .
             $this->request->getDescription() .
             $this->request->getLanguage() .
-            '2.0' .
-            $this->request->getCurrency() .
-            str_pad('', 6);
+            $protocol_version .
+            $this->request->getCurrency();
 
         $this->assertSame(
             $expected,
