@@ -129,6 +129,7 @@ class Response
         if ($this->useFileKeyReader) {
           return $this->readKey($this->publicCertificate);
         }
+        
         return $this->publicCertificate;
     }
 }
