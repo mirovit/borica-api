@@ -344,7 +344,7 @@ class Request
     }
 
     /**
-     * @param $desc
+     * @param string $desc
      */
     private function validateDescription($desc)
     {
