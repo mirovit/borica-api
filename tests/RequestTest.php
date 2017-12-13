@@ -305,9 +305,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function it_verifies_the_protocol_version()
     {
-        $this->assertTrue($this->request->verifyProtocolVersion('1.0'));
-        $this->assertTrue($this->request->verifyProtocolVersion('1.1'));
-        $this->assertTrue($this->request->verifyProtocolVersion('2.0'));
+        $this->assertSame('1.0', $this->request->getProtocolVersion('1.0'));
+        $this->assertSame('1.1', $this->request->getProtocolVersion('1.1'));
+        $this->assertSame('2.0', $this->request->getProtocolVersion('2.0'));
+
+        $this->assertNotSame('123', $this->request->getProtocolVersion('123'));
     }
 
     /**

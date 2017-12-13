@@ -17,6 +17,8 @@ class Request
     const REVERSAL = 40;
     const PAYED_PROFIT_REVERSAL = 41;
 
+    const SUPPORTED_VERSIONS = ['1.0', '1.1', '2.0'];
+
     private $terminalID;
     private $privateKey;
     private $privateKeyPassword;
@@ -52,26 +54,13 @@ class Request
      */
     public function register($protocolVersion = '1.1', $oneTimeTicket = null)
     {
-        $message = self::REGISTER_TRANSACTION;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
-
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
+        $message = $this->getBaseMessage(self::REGISTER_TRANSACTION, $protocolVersion);
 
         if ($protocolVersion == '2.0') {
-            $message .= str_pad($oneTimeTicket, 6);
+            $message[] = str_pad($oneTimeTicket, 6);
         }
 
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}registerTransaction?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message, 'registerTransaction');
     }
 
     /**
@@ -82,22 +71,9 @@ class Request
      */
     public function status($protocolVersion = '1.1')
     {
-        $message = self::REGISTER_TRANSACTION;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+        $message = $this->getBaseMessage(self::REGISTER_TRANSACTION, $protocolVersion);
 
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
-
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}transactionStatusReport?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message, 'transactionStatusReport');
     }
 
     /**
@@ -108,22 +84,9 @@ class Request
      */
     public function registerDelayedRequest($protocolVersion = '1.1')
     {
-        $message = self::DELAYED_AUTHORIZATION_REQUEST;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+        $message = $this->getBaseMessage(self::DELAYED_AUTHORIZATION_REQUEST, $protocolVersion);
 
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
-
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message);
     }
 
     /**
@@ -134,22 +97,9 @@ class Request
      */
     public function completeDelayedRequest($protocolVersion = '1.1')
     {
-        $message = self::DELAYED_AUTHORIZATION_COMPLETE;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+        $message = $this->getBaseMessage(self::DELAYED_AUTHORIZATION_COMPLETE, $protocolVersion);
 
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
-
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message);
     }
 
     /**
@@ -160,22 +110,9 @@ class Request
      */
     public function reverseDelayedRequest($protocolVersion = '1.1')
     {
-        $message = self::DELAYED_AUTHORIZATION_REVERSAL;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+        $message = $this->getBaseMessage(self::DELAYED_AUTHORIZATION_REVERSAL, $protocolVersion);
 
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
-
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message);
     }
 
     /**
@@ -186,22 +123,9 @@ class Request
      */
     public function reverse($protocolVersion = '1.1')
     {
-        $message = self::REVERSAL;
-        $message .= $this->getDate();
-        $message .= $this->getAmount();
-        $message .= $this->getTerminalID();
-        $message .= $this->getOrderID();
-        $message .= $this->getDescription();
-        $message .= $this->getLanguage();
-        $message .= $this->verifyProtocolVersion($protocolVersion) ? $protocolVersion : '1.0';
+        $message = $this->getBaseMessage(self::REVERSAL, $protocolVersion);
 
-        if ($protocolVersion != '1.0') {
-            $message .= $this->getCurrency();
-        }
-        
-        $message = $this->signMessage($message);
-
-        return "{$this->getGatewayURL()}manageTransaction?eBorica=" . urlencode(base64_encode($message));
+        return $this->generateURL($message);
     }
 
     public function getDate()
@@ -248,6 +172,7 @@ class Request
     public function transactionCode($code)
     {
         $this->transactionCode = $code;
+
         return $this;
     }
 
@@ -256,6 +181,7 @@ class Request
         $this->validateAmount($amount);
 
         $this->amount = $amount * 100;
+
         return $this;
     }
 
@@ -264,6 +190,7 @@ class Request
         $this->validateOrderID($id);
 
         $this->orderID = $id;
+
         return $this;
     }
 
@@ -272,12 +199,14 @@ class Request
         $this->validateDescription($desc);
 
         $this->description = $desc;
+
         return $this;
     }
 
     public function currency($currency)
     {
         $this->currency = strtoupper($currency);
+
         return $this;
     }
 
@@ -287,9 +216,13 @@ class Request
      * @param $protocolVersion
      * @return bool
      */
-    public function verifyProtocolVersion($protocolVersion)
+    public function getProtocolVersion($protocolVersion)
     {
-        return $protocolVersion == '1.0' || $protocolVersion == '1.1' || $protocolVersion == '2.0';
+        if(in_array($protocolVersion, self::SUPPORTED_VERSIONS)) {
+            return $protocolVersion;
+        }
+
+        return '1.1';
     }
 
     /**
@@ -300,6 +233,20 @@ class Request
     public function getGatewayURL()
     {
         return (bool)$this->debug ? $this->testGatewayURL : $this->gatewayURL;
+    }
+
+    /**
+     * Generate the request URL for Borica.
+     * 
+     * @param $message
+     * @param string $type
+     * @return string
+     */
+    public function generateURL($message, $type = 'manageTransaction')
+    {
+        $message = $this->signMessage($message);
+
+        return "{$this->getGatewayURL()}{$type}?eBorica=" . urlencode(base64_encode($message));
     }
 
 
@@ -313,6 +260,7 @@ class Request
         if ($this->useFileKeyReader) {
             return $this->readKey($this->privateKey);
         }
+
         return $this->privateKey;
     }
 
@@ -324,6 +272,10 @@ class Request
      */
     public function signMessage($message)
     {
+        if(is_array($message)) {
+            $message = implode('', $message);
+        }
+
         $signature = null;
 
         $pkeyid = openssl_pkey_get_private($this->getPrivateKey(), $this->privateKeyPassword);
@@ -331,6 +283,35 @@ class Request
         openssl_free_key($pkeyid);
 
         return $message . $signature;
+    }
+
+    /**
+     * Get the base message structure.
+     *
+     * @param $messageType
+     * @param string $protocolVersion
+     * @return array
+     */
+    protected function getBaseMessage($messageType, $protocolVersion = '1.1')
+    {
+        $protocolVersion = $this->getProtocolVersion($protocolVersion);
+
+        $message = [
+            $messageType,
+            $this->getDate(),
+            $this->getAmount(),
+            $this->getTerminalID(),
+            $this->getOrderID(),
+            $this->getDescription(),
+            $this->getLanguage(),
+            $protocolVersion,
+        ];
+
+        if ($protocolVersion != '1.0') {
+            $message[] = $this->getCurrency();
+        }
+
+        return $message;
     }
 
     /**
