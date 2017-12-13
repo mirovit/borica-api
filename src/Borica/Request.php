@@ -348,7 +348,9 @@ class Request
      */
     private function validateDescription($desc)
     {
-        if (strlen($desc) < 1 || strlen($desc) > 125) {
+        $descLength = strlen($desc);
+
+        if ($descLength < 1 || $descLength > 125) {
             throw new LengthException('The description of the request should be between 1 and 125 symbols.');
         }
     }
@@ -358,7 +360,9 @@ class Request
      */
     private function validateOrderID($id)
     {
-        if (strlen($id) < 1 || strlen($id) > 15) {
+        $idLength = strlen($id);
+
+        if ($idLength < 1 || $idLength > 15) {
             throw new LengthException('The order id should be between 1 and 15 symbols.');
         }
     }
