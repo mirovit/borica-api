@@ -196,7 +196,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function it_validates_amount()
     {
-        $this->request->amount('1');
+        $this->request->amount('not-a-number-amount');
     }
 
     /**
