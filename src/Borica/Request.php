@@ -213,7 +213,7 @@ class Request
     {
         $this->validateAmount($this->amount);
 
-        return str_pad($this->amount, 12, "0", STR_PAD_LEFT);
+        return str_pad($this->amount, 12, '0', STR_PAD_LEFT);
     }
 
     public function getTerminalID()
